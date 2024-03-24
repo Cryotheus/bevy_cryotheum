@@ -12,6 +12,8 @@ pub struct FixedInput;
 /// `ButtonInput<T>` but with a different type ID to differentiate it from other resources of the same type ID.
 pub type FixedButtonInput<T> = Sign<ButtonInput<T>, FixedInput>;
 
+/// Provides the `FixedButtonInput<KeyCode>` and `FixedButtonInput<MouseButton>` resources.
+/// These resources are meant to be used in the `FixedUpdate` schedules (after `FixedFirst`) instead of `Update` (like the normal `ButtonInput` resources.)
 pub struct PluginMain;
 
 impl Plugin for PluginMain {
