@@ -5,8 +5,14 @@ use std::{mem::replace, str::FromStr};
 
 #[derive(Clone, Debug, Event, PartialEq)]
 pub struct Joel {
+	/// The arguments this command was run with.
 	pub arguments: Vec<String>,
+
+	/// The command name used in comparison.
 	pub command: String,
+
+	/// The original string that was used in making the arguments vector.
+	pub original_arguments: Option<String>,
 }
 
 impl Joel {
@@ -15,12 +21,54 @@ impl Joel {
 		Self {
 			arguments: Vec::new(),
 			command: command.into(),
+			original_arguments: None,
 		}
 	}
 
 	/// Same as calling `len` on the `arguments` field.
 	pub fn len(&self) -> usize {
 		self.arguments.len()
+	}
+
+	/// Gets the original_arguments field, or rebuilds an equivalent.
+	pub fn arguments_string(&self) -> String {
+		if let Some(original_arguments) = &self.original_arguments {
+			return original_arguments.clone();
+		}
+
+		let mut arguments_string = String::new();
+
+		for argument in &self.arguments {
+			let start_index = arguments_string.len();
+			let mut has_whitespace = false;
+
+			for char in argument.chars() {
+				match char {
+					'"' | '\'' | '\\' => arguments_string.push('\\'),
+
+					_ => {
+						if char.is_whitespace() {
+							has_whitespace = true;
+						}
+					}
+				}
+
+				arguments_string.push(char);
+			}
+
+			//wrap in quotes
+			if has_whitespace {
+				arguments_string.insert(start_index, '"');
+				arguments_string.push('"');
+			}
+
+			arguments_string.push(' ');
+		}
+
+		arguments_string.pop();
+		arguments_string.shrink_to_fit();
+
+		arguments_string
 	}
 
 	/// Attempt to parse the argument at the specified index.
@@ -57,6 +105,7 @@ impl FromStr for Joel {
 		let mut argument_builder = String::new();
 		let mut joel = Joel::new(command);
 		let mut state = JoelParseState::Natural;
+		joel.original_arguments = Some(String::from(string));
 
 		'chars: for char in arguments_string.chars() {
 			use JoelParseState as Jps;
@@ -130,11 +179,21 @@ impl FromStr for Joel {
 			state.finish_escape();
 		}
 
+		if state.escaping() {
+			bail!("Unfinished escape in arguments");
+		}
+
 		if !argument_builder.is_empty() {
 			joel.push(argument_builder);
 		}
 
 		Ok(joel)
+	}
+}
+
+impl ToString for Joel {
+	fn to_string(&self) -> String {
+		format!("{} {}", self.command, self.arguments_string())
 	}
 }
 
