@@ -1,0 +1,14 @@
+[package]
+authors = ["Cryotheum <dont>"]
+edition = "2021"
+name = "bevy_cryotheum"
+repository = "https://github.com/Cryotheus/bevy_cryotheum"
+version = "0.1.0"
+
+[dependencies]
+anyhow = { version = "1.0", optional = true }
+bevy = "0.13.1"
+
+[features]
+default = ["plugins"]
+plugins = ["dep:anyhow"]
