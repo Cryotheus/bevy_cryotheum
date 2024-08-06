@@ -1,10 +1,15 @@
 # Cryotheum's Bevy Suite
 A collection of plugins and utilities for game I make on the Bevy game engine.
 
+# Work in Progress
+This is most definitely not production-ready.
+- [ ] 
+
 # Features
-|  Feature  | Default | Dependencies | Notes                             |
-| :-------: | :-----: | ------------ | --------------------------------- |
-| `plugins` |   ✅    | `anyhow`     | For disabling the plugins module. |
+|  Feature  | Default | Dependencies   | Notes                                     |
+| :-------: | :-----: | -------------- | ----------------------------------------- |
+| `plugins` |   ✅    | `anyhow`       | For disabling the plugins module.         |
+|  `steam`  |   ❌    | `steamworks-x` | Adds a plugin for steamworks integration. |
 
 # License
 
