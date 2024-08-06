@@ -3,13 +3,14 @@ A collection of plugins and utilities for game I make on the Bevy game engine.
 
 # Work in Progress
 This is most definitely not production-ready.
-- [ ] 
 
 # Features
-|  Feature  | Default | Dependencies   | Notes                                     |
-| :-------: | :-----: | -------------- | ----------------------------------------- |
-| `plugins` |   ✅    | `anyhow`       | For disabling the plugins module.         |
-|  `steam`  |   ❌    | `steamworks-x` | Adds a plugin for steamworks integration. |
+|      Feature      | Default | Dependencies | Notes                                        |
+| :---------------: | :-----: | ------------ | -------------------------------------------- |
+|    `arrayvec`     |   ✅    | `arrayvec`   | For disabling the plugins module.            |
+|    `smallvec`     |   ✅    | `smallvec`   | Adds a plugin for steamworks integration.    |
+|      `serde`      |         |              | Enables the `serde` feature on dependencies. |
+| `dynamic_linking` |         |              | Enables bevy's `dynamic_linking` feature     |
 
 # License
 
