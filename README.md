@@ -5,12 +5,14 @@ A collection of plugins and utilities for game I make on the Bevy game engine.
 This is most definitely not production-ready.
 
 # Features
-|      Feature      | Default | Dependencies | Notes                                        |
-| :---------------: | :-----: | ------------ | -------------------------------------------- |
-|    `arrayvec`     |   ✅    | `arrayvec`   | For disabling the plugins module.            |
-|    `smallvec`     |   ✅    | `smallvec`   | Adds a plugin for steamworks integration.    |
-|      `serde`      |         |              | Enables the `serde` feature on dependencies. |
-| `dynamic_linking` |         |              | Enables bevy's `dynamic_linking` feature     |
+|               Feature               | Default | Dependencies | Notes                                                                                                                          |
+|:-----------------------------------:|:-------:|--------------|--------------------------------------------------------------------------------------------------------------------------------|
+|             `arrayvec`              |    ✅    | `arrayvec`   | For disabling the plugins module.                                                                                              |
+|             `smallvec`              |    ✅    | `smallvec`   | Adds a plugin for steamworks integration.                                                                                      |
+|               `serde`               |         |              | Enables the `serde` feature on dependencies, and enables the `material_toml` module.                                           |
+|          `dynamic_linking`          |         |              | Enables bevy's `dynamic_linking` feature                                                                                       |
+| `pbr_multi_layer_material_textures` |         |              | Enables bevy's `pbr_multi_layer_material_textures` feature and allows `MaterialToml` to load clearcoat textures.               |
+|     `pbr_transmission_textures`     |         |              | Enables bevy's `pbr_transmission_textures` feature and allows `MaterialToml` to load specular transmission textures. textures. |
 
 # License
 

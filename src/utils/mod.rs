@@ -1,7 +1,9 @@
+//! Miscellaneous utilities for usage in Bevy projects.
+
 use std::hash::Hash;
 use std::path::PathBuf;
+use std::sync::LazyLock;
 use bevy::input::ButtonInput;
-use once_cell::sync::Lazy;
 
 pub mod collection_esoterics;
 pub mod sign;
@@ -11,8 +13,8 @@ pub mod registry;
 
 /// Array where the index is an ASCII character's byte representation,
 /// and the value is true if it is considered alpha numeric.
-/// A-Z, a-z,
-static ALPHA_NUMERIC_BYTES: Lazy<[bool; 256]> = Lazy::new(|| {
+/// `A-Z`, `a-z`, `0-9`, and `_`
+pub static ALPHA_NUMERIC_BYTES: LazyLock<[bool; 256]> = LazyLock::new(|| {
 	let mut array = [false; 256];
 	array[b'_' as usize] = true;
 
@@ -24,10 +26,10 @@ static ALPHA_NUMERIC_BYTES: Lazy<[bool; 256]> = Lazy::new(|| {
 });
 
 /// The current working directory.
-pub static CWD: Lazy<PathBuf> = Lazy::new(|| std::env::current_dir().expect("Failed to find current working directory!"));
+pub static CWD: LazyLock<PathBuf> = LazyLock::new(|| std::env::current_dir().expect("Failed to find current working directory!"));
 
 /// The directory which contains the running executable.
-pub static EXE_DIR: Lazy<PathBuf> = Lazy::new(|| {
+pub static EXE_DIR: LazyLock<PathBuf> = LazyLock::new(|| {
 	let mut path = std::env::current_exe().expect("Failed to find executable path!");
 
 	//we want the dir, not the executable itself
@@ -36,7 +38,8 @@ pub static EXE_DIR: Lazy<PathBuf> = Lazy::new(|| {
 	path
 });
 
-/// For implementing the `common_sign` method on various types, which are typically tuples.
+/// For implementing the [`CommonSign::common_sign`] method on various types, which are typically tuples.
+/// Most notable implemented on `[bool; 2]`/`(bool, bool)` and `(&ButtonInput<T>, T, T)`
 pub trait CommonSign {
 	/// Returns 1f32, 0f32, or -1f32 as would be done commonly when making an arithmetic sign function of the given type/types.
 	fn common_sign(&self) -> f32;
@@ -53,6 +56,17 @@ impl CommonSign for (bool, bool) {
 	}
 }
 
+impl CommonSign for [bool; 2] {
+	/// (false, true) => 1f32
+	fn common_sign(&self) -> f32 {
+		match self {
+			[true, false] => -1.,
+			[false, true] => 1.,
+			[false, false] | [true, true] => 0.,
+		}
+	}
+}
+
 impl<'a, T> CommonSign for (&'a ButtonInput<T>, T, T)
 where
 	T: Copy + Eq + Hash + Send + Sync + 'static,
@@ -64,6 +78,7 @@ where
 
 /// For implementing the `is_alpha_numeric` method on various types, which are typically strings.
 pub trait IsAlphaNumeric {
+	/// Comparse each byte against [`ALPHA_NUMERIC_BYTES`].
 	fn is_alpha_numeric(&self) -> bool;
 }
 
