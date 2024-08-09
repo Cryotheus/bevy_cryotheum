@@ -12,7 +12,7 @@ version = "1.0.0"
 [dependencies]
 anyhow = "1.0"
 arrayvec = { version = "0.7", optional = true }
-bevy = "0.14"
+bevy = "0.14.1"
 cfg-if = "1.0"
 once_cell = "1.19"
 smallvec = { version = "1.13", optional = true }
