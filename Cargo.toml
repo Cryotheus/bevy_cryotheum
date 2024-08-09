@@ -4,7 +4,7 @@ edition = "2021"
 license = "MIT OR Apache-2.0"
 name = "bevy_cryotheum"
 repository = "https://github.com/Cryotheus/bevy_cryotheum"
-version = "1.1.0"
+version = "1.2.0"
 
 #[workspace]
 #members = ["examples/steam-example"]

@@ -328,7 +328,7 @@ impl MaterialToml {
 			[None, None] => {}
 
 			[rough, metal] => {
-				material.metallic = metal.unwrap_or(1.);
+				material.metallic = metal.unwrap_or(0.);
 				material.metallic_roughness_texture = fn_load("combo_0rm");
 				material.perceptual_roughness = rough.unwrap_or(1.);
 			}
