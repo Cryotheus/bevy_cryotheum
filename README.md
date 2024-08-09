@@ -1,5 +1,5 @@
 # Cryotheum's Bevy Suite
-A collection of plugins and utilities for game I make on the Bevy game engine.
+A collection of plugins and utilities for games I make on the Bevy game engine.
 
 # Work in Progress
 This is most definitely not production-ready.
