@@ -2,13 +2,13 @@
 pub mod arrayvec;
 
 #[cfg(feature = "arrayvec")]
-pub use crate::utils::weighted_set::arrayvec::*;
+pub use crate::weighted_set::arrayvec::*;
 
 #[cfg(feature = "smallvec")]
 pub mod smallvec;
 
 #[cfg(feature = "smallvec")]
-pub use crate::utils::weighted_set::smallvec::*;
+pub use crate::weighted_set::smallvec::*;
 
 use std::fmt::{Debug, Formatter};
 use std::num::NonZeroUsize;

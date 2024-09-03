@@ -5,12 +5,6 @@ use std::path::PathBuf;
 use std::sync::LazyLock;
 use bevy::input::ButtonInput;
 
-pub mod collection_esoterics;
-pub mod sign;
-pub mod weighted_set;
-pub mod registry;
-
-
 /// Array where the index is an ASCII character's byte representation,
 /// and the value is true if it is considered alpha numeric.
 /// `A-Z`, `a-z`, `0-9`, and `_`

@@ -1,3 +1,5 @@
+//! See [`Sign`].
+
 use std::fmt::{Debug, Display, Formatter};
 use std::marker::PhantomData;
 use std::ops::{Deref, DerefMut};

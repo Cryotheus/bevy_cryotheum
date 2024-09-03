@@ -211,7 +211,7 @@ impl MaterialToml {
 				let descriptor_send = Arc::clone(descriptor_ref);
 
 				asset_server.load_with_settings(path, move |settings: &mut ImageLoaderSettings| {
-					settings.sampler = ImageSampler::Descriptor(descriptor_send.as_ref().to_owned());
+					settings.sampler = ImageSampler::Descriptor(descriptor_send.as_ref().clone());
 				})
 			} else {
 				asset_server.load(path)
@@ -273,13 +273,13 @@ impl MaterialToml {
 				fn_asset_path("depth").map(|path|
 				//if we have a non-default ImageSamplerDescriptor,
 				//we need to do some funky stuff to safely send it without degenerating the closure into an FnOnce implementer
+				//mag_filter: ImageFilterMode::Nearest,
+				//min_filter: ImageFilterMode::Nearest,
+				//mipmap_filter: ImageFilterMode::Nearest,
 				if let Some(ref descriptor_ref) = descriptor_arc {
 					let descriptor_send = Arc::clone(descriptor_ref);
 
 					asset_server.load_with_settings(path, move |settings: &mut ImageLoaderSettings| {
-						//mag_filter: ImageFilterMode::Nearest,
-						//min_filter: ImageFilterMode::Nearest,
-						//mipmap_filter: ImageFilterMode::Nearest,
 						let mut descriptor = descriptor_send.as_ref().to_owned();
 						descriptor.mag_filter = ImageFilterMode::Nearest;
 						descriptor.min_filter = ImageFilterMode::Nearest;
@@ -287,7 +287,11 @@ impl MaterialToml {
 						settings.sampler = ImageSampler::Descriptor(descriptor);
 					})
 				} else {
-					asset_server.load(path)
+					//TODO: the else case here does not properly set the filtering modes for perf!
+					//see above for proper setup!
+					asset_server.load_with_settings(path, move |settings: &mut ImageLoaderSettings| {
+						settings.sampler = ImageSampler::Descriptor(ImageSamplerDescriptor::nearest());
+					})
 				}
 				)
 			};
