@@ -4,7 +4,7 @@ A collection of plugins and utilities for games I make on the Bevy game engine.
 # Work in Progress
 This is most definitely not production-ready.
 
-# Features
+# Manifest Features
 |               Feature               | Default | Dependencies | Notes                                                                                                                          |
 |:-----------------------------------:|:-------:|--------------|--------------------------------------------------------------------------------------------------------------------------------|
 |             `arrayvec`              |    ✅    | `arrayvec`   | For disabling the plugins module.                                                                                              |
