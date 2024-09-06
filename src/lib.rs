@@ -1,5 +1,3 @@
-extern crate core;
-
 pub mod collection_esoterics;
 pub mod registry;
 pub mod sign;

@@ -1,11 +1,7 @@
-use smallvec::SmallVec;
+use crate::collection_esoterics::anyvec::{AnyVec, AnyVecMut};
 use std::fmt::{Debug, Formatter};
 use std::marker::PhantomData;
-use std::ops::{Bound, Deref, DerefMut, Range, RangeBounds};
-use bevy::asset::AssetContainer;
-use bevy::asset::io::ErasedAssetWriter;
-use bevy::tasks::futures_lite::StreamExt;
-use crate::collection_esoterics::anyvec::{AnyVec, AnyVecMut};
+use std::ops::{Bound, Deref, DerefMut, RangeBounds};
 
 /// Part of a larger segment with typically from a [`ContiguousSegments`] collection.
 /// Same as [`Segment`] but has a length referring to where it is in the collection.
@@ -281,7 +277,10 @@ impl<T> DerefMut for Segment<T> {
 }
 
 /// Contiguous sequence of [`AlignedSegment`]s.
-pub struct ContiguousSegments<T, C = Vec<AlignedSegment<T>>> where C: AnyVecMut<AlignedSegment<T>> {
+pub struct ContiguousSegments<T, C = Vec<AlignedSegment<T>>>
+where
+	C: AnyVecMut<AlignedSegment<T>>,
+{
 	segments: C,
 	total_length: f32,
 	phantom: PhantomData<T>,
@@ -300,9 +299,9 @@ impl<T, C: AnyVecMut<AlignedSegment<T>>> ContiguousSegments<T, C> {
 	pub fn clean(&mut self) {
 		self.segments.retain_mut(
 			|AlignedSegment {
-				segment: Segment { length, .. },
-				..
-			}| length.is_normal() && length.is_sign_positive(),
+			     segment: Segment { length, .. },
+			     ..
+			 }| length.is_normal() && length.is_sign_positive(),
 		);
 
 		self.realign();
@@ -457,9 +456,9 @@ impl<T, C: AnyVecMut<AlignedSegment<T>>> ContiguousSegments<T, C> {
 	pub fn partition_point(&self, length: f32) -> usize {
 		self.segments.partition_point(
 			|AlignedSegment {
-				alignment,
-				segment: Segment { length: seg_length, .. },
-			}| (*alignment + *seg_length) < length,
+			     alignment,
+			     segment: Segment { length: seg_length, .. },
+			 }| (*alignment + *seg_length) < length,
 		)
 	}
 
@@ -540,19 +539,7 @@ impl<T, C: AnyVecMut<AlignedSegment<T>>> ContiguousSegments<T, C> {
 
 		match [range.start_bound().cloned(), range.end_bound().cloned()] {
 			//make the whole thing a single segment
-			[Unbounded, Unbounded] => {
-				self.segments.clear();
-
-				self.segments.push(AlignedSegment {
-					segment: Segment {
-						length: self.total_length,
-						value,
-					},
-					alignment: 0.,
-				});
-
-				Some(0)
-			}
+			[Unbounded, Unbounded] => self.set_whole(value),
 
 			[Excluded(start_bound) | Included(start_bound), Unbounded] => {
 				let original_total_length = self.total_length;
@@ -757,6 +744,27 @@ impl<T, C: AnyVecMut<AlignedSegment<T>>> ContiguousSegments<T, C> {
 
 			bounds => todo!("add method to handle {:?}", bounds),
 		}
+	}
+
+	/// Sets the entirety of the `ContiguousSegment` to a single segment with matching length.
+	pub fn set_whole(&mut self, value: T) -> Option<usize> {
+		let count = self.count();
+
+		//can't set the whole if there are no segments to begin with
+		if count == 0 {
+			return None;
+		}
+
+		//remove other entries
+		if count > 1 {
+			self.segments.truncate(1);
+		}
+
+		let segment = &mut self.segments[0];
+		segment.length = self.total_length;
+		segment.value = value;
+
+		Some(0)
 	}
 
 	/// Splits a segment into two at the specified length along the whole.
